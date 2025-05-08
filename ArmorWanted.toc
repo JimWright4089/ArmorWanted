@@ -1,0 +1,10 @@
+## Interface: 100207
+## Version: v0.0.1
+## Title: Armor Wanted
+## Notes: Find the missing set parts
+## Author: Jim Wright
+## SavedVariables: Armor_Wanted_DB
+
+ArmorWanted.lua
+ArmorWanted.xml
+
