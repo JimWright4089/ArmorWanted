@@ -15,10 +15,21 @@
 --  
 --------------------------------------------------------------------------------------------------
 
---local CurrentListOfSets = {};
-local ROW_HEIGHT = 20 -- Matches Armor_Wanted_Line_Template height
---local scrollFramesPool = {} -- Pool to reuse row frames
 
+MAIN_SELECTION   = "main";
+CLASS_SELECTION  = "class";
+EXPAND_SELECTION      = "expand";
+PVP_SELECTED     = "pvp";
+PVE_SELECTED     = "evp";
+FILTER_100 = "100";
+FILTER_90       = "90";
+FILTER_0           = "0";
+FILTER_OTHER       = "other";
+
+Armor_Wanted_DB  = {};
+
+
+local ROW_HEIGHT = 20 -- Matches Armor_Wanted_Line_Template height
 local DISPLAYING_NOTHING = 0;
 local DISPLAYING_CLASS = 1;
 local DISPLAYING_EXPAND = 2;
@@ -27,11 +38,11 @@ local MAX_LINES_FOR_MAIN = 20
 local PIXELS_PER_LINE = 20
 STRING_MAIN_LINE           = "ArmorWantedScrollLine";
 
-
 local whatAreWeDisplaying = DISPLAYING_NOTHING;
 
 -- Declare the global variable at the top level of the file
 ArmorWanted_SecondDropdownFrame = nil;
+ArmorWanted_FirstDropdownFrame = nil;
 
 EngExpandToNumberMask = {
 	["Classic"] = 0,
@@ -130,62 +141,6 @@ function Armor_Wanted_Button_One(self, button, down)
   print(UnitClass(UNIT_PLAYER));
 end
 
---------------------------------------------------------------------------------------------------
---  Function: Armor_Wanted_ClassDropdown_OnClick
---
---  Desc:  Handles clicks on the class dropdown items.
---
---------------------------------------------------------------------------------------------------
-function Armor_Wanted_ClassDropdown_OnClick(self)
-  UIDropDownMenu_SetSelectedValue(ArmorWanted_ClassDropdown, self.value);
-  print("Selected class:", self.value);
-
-  -- Add any logic here for when a class is selected
-  if self.value == "Warrior" then
-    print("A Warrior was selected!");
-  -- Add more conditions here if needed
-  -- elseif self.value == "Mage" then
-  --   print("A Mage was selected!");
-  else
-    print("Selected class is not a Warrior.");
-  end
-end
-
---------------------------------------------------------------------------------------------------
---  Function: ArmorWanted_ClassDropdown_Initialize
---
---  Desc:  Initializes the class dropdown menu items.
---
---------------------------------------------------------------------------------------------------
-function ArmorWanted_ClassDropdown_Initialize(self, level)
-  local info = UIDropDownMenu_CreateInfo();
-
-  -- Example: Populate with WoW classes
-  local classes = {};
-
-  for className, classMask in pairs(EngClassToNameMask) do
-	table.insert(classes, className);
-  end
-
-  for _, className in ipairs(classes) do
-    info.text = className;
-    info.value = className;
-    info.func = Armor_Wanted_ClassDropdown_OnClick;
-    UIDropDownMenu_AddButton(info, level);
-  end
-end
-
---------------------------------------------------------------------------------------------------
---  Function: ArmorWanted_ClassDropdown_OnLoad
---
---  Desc:  Called when the class dropdown frame loads.
---
---------------------------------------------------------------------------------------------------
-function ArmorWanted_ClassDropdown_OnLoad(self)
-  UIDropDownMenu_Initialize(self, ArmorWanted_ClassDropdown_Initialize);
-  UIDropDownMenu_SetWidth(self, 150);
-  UIDropDownMenu_SetText(self, "Select Class"); -- Set default text
-end
 
 --------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------
@@ -196,32 +151,6 @@ end
 --------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------
-
---------------------------------------------------------------------------------------------------
---  Function: ArmorWanted_ClassDropdown_OnLoad
---
---  Desc:  Called when the class dropdown frame loads.
---
---------------------------------------------------------------------------------------------------
-function ArmorWanted_FirstSelectionDropdown_OnLoad(self)
-	UIDropDownMenu_Initialize(self, ArmorWanted_FirstSelectionDropdown_Initialize);
-	UIDropDownMenu_SetWidth(self, 100);
-	UIDropDownMenu_SetText(self, "Item"); -- Set default text
-end
-
---------------------------------------------------------------------------------------------------
---  Function: ArmorWanted_SecondSelectionDropdown_OnLoad
---
---  Desc:  Called when the second selection dropdown frame loads.
---
---------------------------------------------------------------------------------------------------
-function ArmorWanted_SecondSelectionDropdown_OnLoad(self)
-	print("ArmorWanted_SecondSelectionDropdown_OnLoad")
-	ArmorWanted_SecondDropdownFrame = self;
-
-	UIDropDownMenu_SetWidth(self, 150);
-	UIDropDownMenu_SetText(self, "Select Item"); -- Set default text
-end
 
 --------------------------------------------------------------------------------------------------
 --  Function: ArmorWanted_ClassDropdown_Initialize
@@ -248,33 +177,31 @@ end
 --  Desc:  Initializes the class dropdown menu items.
 --
 --------------------------------------------------------------------------------------------------
-function ArmorWanted_SecondSelectionClassDropdown_Initialize(self, level)
-	print("ArmorWanted_SecondSelectionClassDropdown_Initialize(self, level)");
-	print(level)
-	print(self)
+function ArmorWanted_SecondSelectionClassDropdown_Initialize()
 
-	local info = UIDropDownMenu_CreateInfo();
+	ArmorWanted_SecondDropdownFrame:SetupMenu(function(dropdown, rootDescription)
+		local classes = {"Warrior",
+			"Paladin",
+			"Hunter",
+			"Rogue",
+			"Priest",
+			"Death Knight",
+			"Shaman",
+			"Mage",
+			"Warlock",
+			"Monk",
+			"Druid",
+			"Demon Hunter",
+			"Evoker"};
 
-	-- Example: Populate with WoW classes
-	local classes = {"Warrior", 
-				"Paladin", 
-				"Hunter", 
-				"Rogue", 
-				"Priest", 
-				"Death Knight", 
-				"Shaman", 
-				"Mage", 
-				"Warlock", 
-				"Monk", 
-				"Druid", 
-				"Demon Hunter", 
-				"Evoker"};
-	for _, className in ipairs(classes) do
-		info.text = className;
-		info.value = className;
-		info.func = Armor_Wanted_SecondSelectionClassDropdown_OnClick;
-		UIDropDownMenu_AddButton(info, level);
+			for _, name in ipairs(classes) do
+				rootDescription:CreateButton(name, Armor_Wanted_SecondSelectionClassDropdown_OnClick, name);
+			end
+	end);
+	if(nil ~= Armor_Wanted_DB[CLASS_SELECTION]) then
+		ArmorWanted_SecondDropdownFrame:SetDefaultText(Armor_Wanted_DB[CLASS_SELECTION]);
 	end
+
 end
 
 --------------------------------------------------------------------------------------------------
@@ -283,26 +210,27 @@ end
 --  Desc:  Initializes the class dropdown menu items.
 --
 --------------------------------------------------------------------------------------------------
-function ArmorWanted_SecondSelectionExpansionDropdown_Initialize(self, level)
-	local info = UIDropDownMenu_CreateInfo();
+function ArmorWanted_SecondSelectionExpansionDropdown_Initialize()
+	ArmorWanted_SecondDropdownFrame:SetupMenu(function(dropdown, rootDescription)
+		local expansions = {  "Classic", -- Often referred to as Vanilla or the base game
+			"The Burning Crusade",
+			"Wrath of the Lich King",
+			"Cataclysm",
+			"Mists of Pandaria",
+			"Warlords of Draenor",
+			"Legion",
+			"Battle for Azeroth",
+			"Shadowlands",
+			"Dragonflight",
+			"The War Within" };
 
-	-- Example: Populate with WoW classes
-	local expansions = {  "Classic", -- Often referred to as Vanilla or the base game
-	"The Burning Crusade",
-	"Wrath of the Lich King",
-	"Cataclysm",
-	"Mists of Pandaria",
-	"Warlords of Draenor",
-	"Legion",
-	"Battle for Azeroth",
-	"Shadowlands",
-	"Dragonflight",
-	"The War Within" };
-	for _, ExpansionName in ipairs(expansions) do
-		info.text = ExpansionName;
-		info.value = ExpansionName;
-		info.func = Armor_Wanted_SecondSelectionExpansionDropdown_OnClick;
-		UIDropDownMenu_AddButton(info, level);
+			for _, name in ipairs(expansions) do
+				rootDescription:CreateButton(name, Armor_Wanted_SecondSelectionExpansionDropdown_OnClick, name);
+			end
+	end);
+
+	if(nil ~= Armor_Wanted_DB[EXPAND_SELECTION]) then
+		ArmorWanted_SecondDropdownFrame:SetDefaultText(Armor_Wanted_DB[EXPAND_SELECTION]);
 	end
 end
 
@@ -325,48 +253,38 @@ end
 --------------------------------------------------------------------------------------------------
 function ChangeAWFilter()
 
-	print("ChangeAWFilter()")
-	print(Armor_Wanted_DB[MAIN_SELECTION])
-	print(ArmorWanted_SecondDropdownFrame)
-
 	if(nil == Armor_Wanted_DB[MAIN_SELECTION]) then
 		return;
 	end
 
+	ArmorWanted_FirstDropdownFrame:SetDefaultText(Armor_Wanted_DB[MAIN_SELECTION]);
+
 	if Armor_Wanted_DB[MAIN_SELECTION] == "Class" then
-		print("Load Class");
-		UIDropDownMenu_Initialize(ArmorWanted_SecondDropdownFrame, ArmorWanted_SecondSelectionClassDropdown_Initialize);
+		ArmorWanted_SecondSelectionClassDropdown_Initialize();
 
 		if(nil == Armor_Wanted_DB[CLASS_SELECTION]) then
 			return
 		end
 
-		BuildClassList(Armor_Wanted_DB[CLASS_SELECTION]);
+		BuildClassList(EngClassToNameMask[Armor_Wanted_DB[CLASS_SELECTION]]);
 		ArmorWanted_ScrollUpdate();
+		ArmorWanted_SecondDropdownFrame:SetDefaultText(Armor_Wanted_DB[CLASS_SELECTION]);
 	end
 
 	if Armor_Wanted_DB[MAIN_SELECTION] == "Expansion" then
-		UIDropDownMenu_Initialize(ArmorWanted_SecondDropdownFrame, ArmorWanted_SecondSelectionExpansionDropdown_Initialize);	
+		ArmorWanted_SecondSelectionExpansionDropdown_Initialize();	
 
 		if(nil == Armor_Wanted_DB[EXPAND_SELECTION]) then
 			return
 		end
 
-		BuildExpansionList(Armor_Wanted_DB[EXPAND_SELECTION]);
+		BuildExpansionList(EngExpandToNumberMask[Armor_Wanted_DB[EXPAND_SELECTION]]);
 		ArmorWanted_ScrollUpdate();
+		ArmorWanted_SecondDropdownFrame:SetDefaultText(Armor_Wanted_DB[EXPAND_SELECTION]);
 	end
 end
 
-
-
-
-
-
-
-
-
-
---------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------
 --  
@@ -382,10 +300,9 @@ end
 --  Desc:  Handles clicks on the class dropdown items.
 --
 --------------------------------------------------------------------------------------------------
-function Armor_Wanted_FirstSelectionDropdown_OnClick(self)
-	UIDropDownMenu_SetSelectedValue(ArmorWanted_FirstSelectionDropdown, self.value);
-
-	Armor_Wanted_DB[MAIN_SELECTION]=self.value;
+function Armor_Wanted_FirstSelectionDropdown_OnClick(thing)
+	ArmorWanted_FirstDropdownFrame:SetDefaultText(thing);
+	Armor_Wanted_DB[MAIN_SELECTION]=thing;
 	ChangeAWFilter()
 end
 
@@ -395,10 +312,9 @@ end
 --  Desc:  Handles clicks on the class dropdown items.
 --
 --------------------------------------------------------------------------------------------------
-function Armor_Wanted_SecondSelectionClassDropdown_OnClick(self)
-	UIDropDownMenu_SetSelectedValue(ArmorWanted_SecondSelectionDropdown, self.value);
-	
-	Armor_Wanted_DB[CLASS_SELECTION] = EngClassToNameMask[self.value];
+function Armor_Wanted_SecondSelectionClassDropdown_OnClick(thing)
+	ArmorWanted_SecondDropdownFrame:SetDefaultText(thing);
+	Armor_Wanted_DB[CLASS_SELECTION] = thing;
 	ChangeAWFilter();
 end
 
@@ -408,14 +324,11 @@ end
 --  Desc:  Handles clicks on the class dropdown items.
 --
 --------------------------------------------------------------------------------------------------
-function Armor_Wanted_SecondSelectionExpansionDropdown_OnClick(self)
-	UIDropDownMenu_SetSelectedValue(ArmorWanted_SecondSelectionDropdown, self.value);
-
-	Armor_Wanted_DB[EXPAND_SELECTION] = EngExpandToNumberMask[self.value];
+function Armor_Wanted_SecondSelectionExpansionDropdown_OnClick(thing)
+	ArmorWanted_SecondDropdownFrame:SetDefaultText(thing);
+	Armor_Wanted_DB[EXPAND_SELECTION] = thing;
 	ChangeAWFilter();
-  end
-
-
+end
 
 --------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------
@@ -533,8 +446,6 @@ end
 function BuildExpansionList(expansionID)
 	CurrentListOfSets = {};
 	TempListOfSets = {};
-	
---	print("expansionID:", expansionID);
 
 	for _,data in ipairs(_G['BaseSets']) do
 			-- if (data.label == "Season 5") then
@@ -649,10 +560,10 @@ end
 --
 --------------------------------------------------------------------------------------------------
 function ArmorWanted_ScrollUpdate()
-	if(whatAreWeDisplaying == DISPLAYING_CLASS) then
+	if(Armor_Wanted_DB[MAIN_SELECTION] == "Class") then
 		ArmorWanted_Class_ScrollUpdate();
 	end
-	if(whatAreWeDisplaying == DISPLAYING_EXPAND) then
+	if(Armor_Wanted_DB[MAIN_SELECTION] == "Expansion") then
 		ArmorWanted_Expand_ScrollUpdate();
 	end
 end

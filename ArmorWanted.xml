@@ -87,10 +87,10 @@
     ====================================================================== -->
 	<Frame name="Armor_Wanted_Main_Frame" hidden="true" parent="UIParent" toplevel="true" movable="true" frameStrata="BACKGROUND" enableMouse="true">
 		<Scripts>
-			<OnLoad>self:RegisterForDrag("LeftButton"); Armor_Wanted_OnLoad();</OnLoad>
+			<OnLoad>self:RegisterForDrag("LeftButton"); Armor_Wanted_OnLoad(self);</OnLoad>
 			<OnDragStart>self:StartMoving();</OnDragStart>
 			<OnDragStop>self:StopMovingOrSizing();</OnDragStop>
-			<OnEvent function="Armor_Wanted_OnEvent"/>
+			<OnShow>Armor_Wanted_OnShow(self);</OnShow>
 		</Scripts>
 
 		<Size>
@@ -186,40 +186,25 @@
 			</Layer>
 		</Layers>
 		<Frames>
-			<Frame name="ArmorWanted_FirstSelectionDropdown" inherits="UIDropDownMenuTemplate" id="1">
-				<Size>
-					<AbsDimension x="75" y="32"/>
-				</Size>
+			<DropdownButton name="ArmorWanted_FirstSelectionDropdown" parentKey="FirstSelectionDropdown" inherits="WowStyle1DropdownTemplate">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="TOPLEFT">
 						<Offset>
-							<AbsDimension x="10" y="-20"/>
+							<AbsDimension x="20" y="-20"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
-				<Scripts>
-					<OnLoad>
-						ArmorWanted_FirstSelectionDropdown_OnLoad(self);
-					</OnLoad>
-				</Scripts>
-			</Frame>
-			<Frame name="ArmorWanted_SecondSelectionDropdown" inherits="UIDropDownMenuTemplate" id="1">
-				<Size>
-					<AbsDimension x="100" y="32"/>
-				</Size>
+			</DropdownButton>
+			<DropdownButton name="ArmorWanted_SecondSelectionDropdown" parentKey="SecondSelectionDropdown" inherits="WowStyle1DropdownTemplate">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="ArmorWanted_FirstSelectionDropdown" relativePoint="TOPRIGHT">
 						<Offset>
-							<AbsDimension x="0" y="0"/>
+							<AbsDimension x="10" y="0"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
-				<Scripts>
-					<OnLoad>
-						ArmorWanted_SecondSelectionDropdown_OnLoad(self);
-					</OnLoad>
-				</Scripts>
-			</Frame>
+			</DropdownButton>
+
 
 			<Button name="$parentOptionButton" inherits="UIPanelButtonTemplate" enableMouse="true" text="Options">
 				<Size>
@@ -239,25 +224,14 @@
 				</Scripts>
 			</Button>
 
-
-
-
-			<Frame name="ArmorWanted_SecondSelectionDropdown" inherits="UIDropDownMenuTemplate" id="1">
-				<Size>
-					<AbsDimension x="100" y="32"/>
-				</Size>
+			<Frame name="ArmorWanted_TitleBar" inherits="Armor_Wanted_Line_Template" id="1">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="ArmorWanted_FirstSelectionDropdown" relativePoint="TOPRIGHT">
+					<Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="TOPLEFT">
 						<Offset>
-							<AbsDimension x="0" y="0"/>
+							<AbsDimension x="20" y="-50" />
 						</Offset>
 					</Anchor>
 				</Anchors>
-				<Scripts>
-					<OnLoad>
-						ArmorWanted_SecondSelectionDropdown_OnLoad(self);
-					</OnLoad>
-				</Scripts>
 			</Frame>
 
 
@@ -265,7 +239,7 @@
 				<Size x="835" y="367"/>
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="ArmorWanted_FirstSelectionDropdown" relativePoint="BOTTOMLEFT">
-						<Offset x="10" y="-25"/>
+						<Offset x="0" y="-30"/>
 					</Anchor>
 				</Anchors>
 				<Scripts>

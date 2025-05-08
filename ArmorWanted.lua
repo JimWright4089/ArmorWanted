@@ -1,15 +1,4 @@
 
-MAIN_SELECTION   = "main";
-CLASS_SELECTION  = "class";
-EXPAND_SELECTION      = "expand";
-PVP_SELECTED     = "pvp";
-PVE_SELECTED     = "evp";
-FILTER_100 = "100";
-FILTER_90       = "90";
-FILTER_0           = "0";
-FILTER_OTHER       = "other";
-
-Armor_Wanted_DB  = {};
 
 BaseSets = {};
 
@@ -135,9 +124,18 @@ function Armor_Wanted_SlashCommand()
 --  Desc:  Event Switch board
 --
 --------------------------------------------------------------------------------------------------
-function Armor_Wanted_OnEvent(self, event,...)
-    if( DEFAULT_CHAT_FRAME ) then
-        DEFAULT_CHAT_FRAME:AddMessage("Event:"..event);
+function Armor_Wanted_OnShow(self)
+    if(nil == Armor_Wanted_DB[MAIN_SELECTION]) then
+--        self.FirstSelectionDropdown:SetDefaultText("Item");
+--        self.SecondSelectionDropdown:SetDefaultText("Select Item");
+    else
+        self.FirstSelectionDropdown:SetDefaultText(Armor_Wanted_DB[MAIN_SELECTION]);
+        Armor_Wanted_FirstSelectionDropdown_OnClick(Armor_Wanted_DB[MAIN_SELECTION]);
+        if("Class" == Armor_Wanted_DB[MAIN_SELECTION]) then
+            self.SecondSelectionDropdown:SetDefaultText(Armor_Wanted_DB[CLASS_SELECTION]);
+        elseif("Expansion" == Armor_Wanted_DB[MAIN_SELECTION]) then
+            self.SecondSelectionDropdown:SetDefaultText(Armor_Wanted_DB[EXPAND_SELECTION]);
+        end
     end
 end
 
@@ -147,7 +145,17 @@ end
 --  Desc:  The load function of grouper
 --
 --------------------------------------------------------------------------------------------------
-function Armor_Wanted_OnLoad()
+local function IsSelected(minute)
+    return false;
+end
+
+--------------------------------------------------------------------------------------------------
+--  Function: Grouper_OnLoad
+--
+--  Desc:  The load function of grouper
+--
+--------------------------------------------------------------------------------------------------
+function Armor_Wanted_OnLoad(self)
 
     SlashCmdList["ARMORW"] = Armor_Wanted_SlashCommand;
   
@@ -173,6 +181,19 @@ function Armor_Wanted_OnLoad()
         --         print(">>", key, value)
         --     end            
         -- end
-    end    
+    end
+
+    ArmorWanted_FirstDropdownFrame = self.FirstSelectionDropdown;
+    ArmorWanted_SecondDropdownFrame = self.SecondSelectionDropdown;
+
+    self.FirstSelectionDropdown:SetWidth(100);
+    self.SecondSelectionDropdown:SetWidth(200);
+	self.FirstSelectionDropdown:SetupMenu(function(dropdown, rootDescription)
+    	rootDescription:CreateButton("Expansion", Armor_Wanted_FirstSelectionDropdown_OnClick, "Expansion");
+	    rootDescription:CreateButton("Class", Armor_Wanted_FirstSelectionDropdown_OnClick, "Class");
+	end);
+
+ --   self.FirstSelectionDropdown:SetDefaultText("Item");
+ --   self.SecondSelectionDropdown:SetDefaultText("Select Item");
   end
   
