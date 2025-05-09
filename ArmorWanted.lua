@@ -240,7 +240,7 @@ function Armor_Wanted_OnLoad(self)
     self.FirstSelectionDropdown:SetDefaultText("Select Item");
 
     Armor_Wanted_Main_Frame:RegisterEvent("VARIABLES_LOADED");
-    Armor_Wanted_Main_Frame:RegisterEvent("LOOT_OPENED");
+    Armor_Wanted_Main_Frame:RegisterEvent("LOOT_CLOSED");
 
 end
 
@@ -288,10 +288,10 @@ end
 function Armor_Wanted_OnEvent(self, event,...)
 
     if ("VARIABLES_LOADED" == event) then
-          Grouper_ProcessVariables();
+          
     end
 
-    if ("LOOT_OPENED" == event) then
+    if ("LOOT_CLOSED" == event) then
         ChangeAWFilter();
     end
 
