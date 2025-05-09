@@ -163,6 +163,8 @@ function Armor_Wanted_OnShow(self)
         end
     end
     InitFilterDropdown();
+
+    self.SearchBox:SetText(Armor_Wanted_DB[SEARCH_TEXT]);
 end
 
 --------------------------------------------------------------------------------------------------
@@ -236,6 +238,10 @@ function Armor_Wanted_OnLoad(self)
     end);
 
     self.FirstSelectionDropdown:SetDefaultText("Select Item");
+
+    Armor_Wanted_Main_Frame:RegisterEvent("VARIABLES_LOADED");
+    Armor_Wanted_Main_Frame:RegisterEvent("LOOT_OPENED");
+
 end
 
 function InitFilterDropdown()
@@ -273,3 +279,20 @@ function InitFilterDropdown()
     end);
 end
 
+--------------------------------------------------------------------------------------------------
+--  Function: Grouper_OnEvent
+--
+--  Desc:  Event Switch board
+--
+--------------------------------------------------------------------------------------------------
+function Armor_Wanted_OnEvent(self, event,...)
+
+    if ("VARIABLES_LOADED" == event) then
+          Grouper_ProcessVariables();
+    end
+
+    if ("LOOT_OPENED" == event) then
+        ChangeAWFilter();
+    end
+
+end

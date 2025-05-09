@@ -91,6 +91,7 @@
 			<OnDragStart>self:StartMoving();</OnDragStart>
 			<OnDragStop>self:StopMovingOrSizing();</OnDragStop>
 			<OnShow>Armor_Wanted_OnShow(self);</OnShow>
+			<OnEvent function="Armor_Wanted_OnEvent"/>
 		</Scripts>
 
 		<Size>
@@ -229,7 +230,7 @@
 				</Anchors>
 				<Scripts>
 					<OnClick>
-						ArmorWanted_Search();
+						ArmorWanted_Search(self:GetParent().SearchBox:GetText());
           			</OnClick>
 				</Scripts>
 			</Button>

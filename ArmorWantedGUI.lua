@@ -28,6 +28,7 @@ FILTER_OTHER        = "Other";
 FILTER_STANDARD     = "Standard";
 FILTER_ATTIRE       = "Attire";
 FILTER_GROUPS       = "Groups";
+SEARCH_TEXT		    = "SearchText";
 
 FILTER_PVE_ID = 1;
 FILTER_PVP_ID = 2;
@@ -286,6 +287,7 @@ function ChangeAWFilter()
 		FilterNumber();
 		FilterAttire();
 		FilterPVPPVE();
+		FilterSearch();
 		ArmorWanted_ScrollUpdate();
 		ArmorWanted_SecondDropdownFrame:SetDefaultText(Armor_Wanted_DB[CLASS_SELECTION]);
 	end
@@ -301,6 +303,7 @@ function ChangeAWFilter()
 		FilterNumber();
 		FilterAttire();
 		FilterPVPPVE();
+		FilterSearch();
 		ArmorWanted_ScrollUpdate();
 		ArmorWanted_SecondDropdownFrame:SetDefaultText(Armor_Wanted_DB[EXPAND_SELECTION]);
 	end
@@ -359,16 +362,27 @@ end
 --  Desc:  Handles clicks on the class dropdown items.
 --
 --------------------------------------------------------------------------------------------------
-function Armor_Wanted_SetFilter(thing)
-	print(thing);
-    for key, value in pairs(ArmorWanted_Check_Array) do
-        print(key, value)
-		if(value["data"] == thing) then
-		 	for key2, value2 in pairs(value) do
-				print(">>",key2, value2)
-		   	end
-		end
-	end
+-- function Armor_Wanted_SetFilter(thing)
+-- 	print(thing);
+--     for key, value in pairs(ArmorWanted_Check_Array) do
+--         print(key, value)
+-- 		if(value["data"] == thing) then
+-- 		 	for key2, value2 in pairs(value) do
+-- 				print(">>",key2, value2)
+-- 		   	end
+-- 		end
+-- 	end
+-- end
+
+--------------------------------------------------------------------------------------------------
+--  Function: Armor_Wanted_SetFilter
+--
+--  Desc:  Handles clicks on the class dropdown items.
+--
+--------------------------------------------------------------------------------------------------
+function ArmorWanted_Search(text)
+	Armor_Wanted_DB[SEARCH_TEXT] = text;
+	ChangeAWFilter();
 end
 
 --------------------------------------------------------------------------------------------------
@@ -603,25 +617,25 @@ function FilterNumber()
 	NewListOfSets = {};
 
 	for _, value in ipairs(CurrentListOfSets) do
-		intserted = false;
+		local inserted = false;
 		if(value.collected == value.total) then
+			inserted = true;
 			if(true == Armor_Wanted_DB[FILTER_100]) then
 				table.insert(NewListOfSets, value);
-				inserted = true;
 			end
 		else
 			if(Armor_Wanted_DB[MAIN_SELECTION] == "Class") then
 				if((value.collected / value.total) > .8) then
+					inserted = true;
 					if(true == Armor_Wanted_DB[FILTER_90]) then
 						table.insert(NewListOfSets, value);
-						inserted = true;
 					end
 				end
 			else
 				if((value.collected / value.total) > .9) then
+					inserted = true;
 					if(true == Armor_Wanted_DB[FILTER_90]) then
 						table.insert(NewListOfSets, value);
-						inserted = true;
 					end
 				end
 			end	
@@ -722,6 +736,28 @@ function FilterPVPPVE()
 end
 
 --------------------------------------------------------------------------------------------------
+--  Function: Armor_Wanted_ClassDropdown_OnClick
+--
+--  Desc:  Handles clicks on the class dropdown items.
+--
+--------------------------------------------------------------------------------------------------
+function FilterSearch()
+
+	if("" ~= Armor_Wanted_DB[SEARCH_TEXT]) then
+		searchForText = string.upper(Armor_Wanted_DB[SEARCH_TEXT]);
+		NewListOfSets = {};
+		for _, value in ipairs(CurrentListOfSets) do
+			searchingText = string.upper(value.label);
+
+			if(string.find(searchingText, searchForText, 1, true)) then
+				table.insert(NewListOfSets, value);
+			end
+		end
+		CurrentListOfSets = NewListOfSets
+	end
+end
+
+--------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------
 --  
@@ -795,9 +831,18 @@ function ArmorWanted_Class_ScrollUpdate()
 
 		getglobal(button:GetName() .. "Col1"):SetWidth(300);
 
-		getglobal(button:GetName() .. "Col1"):SetText(CurrentListOfSets[index].label);
-		getglobal(button:GetName() .. "Col2"):SetText(CurrentListOfSets[index].description);
 
+		if(nil ~= CurrentListOfSets[index].label) then
+			getglobal(button:GetName() .. "Col1"):SetText(CurrentListOfSets[index].label);
+		else
+			getglobal(button:GetName() .. "Col1"):SetText(" ");
+		end
+
+		if(nil ~= CurrentListOfSets[index].description) then
+			getglobal(button:GetName() .. "Col2"):SetText(CurrentListOfSets[index].description);
+		else
+			getglobal(button:GetName() .. "Col2"):SetText(" ");
+		end
 
 		getglobal(button:GetName() .. "Col1"):SetTextColor(0.95,0.95,0.95);	
 		getglobal(button:GetName() .. "Col2"):SetTextColor(0.95,0.95,0.95);	
@@ -889,9 +934,17 @@ function ArmorWanted_Expand_ScrollUpdate()
 
 		getglobal(button:GetName() .. "Col1"):SetWidth(180);
 
-		getglobal(button:GetName() .. "Col1"):SetText(CurrentListOfSets[index].label);
-		getglobal(button:GetName() .. "Col2"):SetText(CurrentListOfSets[index].description);
+		if(nil ~= CurrentListOfSets[index].label) then
+			getglobal(button:GetName() .. "Col1"):SetText(CurrentListOfSets[index].label);
+		else
+			getglobal(button:GetName() .. "Col1"):SetText(" ");
+		end
 
+		if(nil ~= CurrentListOfSets[index].description) then
+			getglobal(button:GetName() .. "Col2"):SetText(CurrentListOfSets[index].description);
+		else
+			getglobal(button:GetName() .. "Col2"):SetText(" ");
+		end
 
 		getglobal(button:GetName() .. "Col1"):SetTextColor(0.95,0.95,0.95);	
 		getglobal(button:GetName() .. "Col2"):SetTextColor(0.95,0.95,0.95);	
@@ -1031,12 +1084,3 @@ function GetSetStatus(setID)
 
 	return returnList;
 end
-
-
-function ArmorWanted_Search(self)
-	print("ArmorWanted_ShowOptions()");
-	ShowUIPanel(Armor_Wanted_Options_Frame);
---	ShowUIPanel(Armor_Wanted_Edit_Frame);
-end
-
-

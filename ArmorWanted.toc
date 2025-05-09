@@ -4,6 +4,8 @@
 ## Notes: Find the missing set parts
 ## Author: Jim Wright
 ## SavedVariables: Armor_Wanted_DB
+## Category-enUS: Collections
+## IconTexture: Interface\Addons\ArmorWanted\textures\armorwantedicon
 
 ArmorWanted.lua
 ArmorWantedGUI.lua
