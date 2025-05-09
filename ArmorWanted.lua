@@ -2,6 +2,31 @@
 
 BaseSets = {};
 
+
+local CalendarConstants =
+{
+	Tables =
+	{
+		{
+			Name = "CalendarFilterFlags",
+			Type = "Enumeration",
+			NumValues = 7,
+			MinValue = 1,
+			MaxValue = 64,
+			Fields =
+			{
+				{ Name = "PVE", Type = "CalendarFilterFlags", EnumValue = 1 },
+				{ Name = "PVP", Type = "CalendarFilterFlags", EnumValue = 2 },
+				{ Name = "100%", Type = "CalendarFilterFlags", EnumValue = 4 },
+				{ Name = "90%", Type = "CalendarFilterFlags", EnumValue = 8 },
+				{ Name = "Other", Type = "CalendarFilterFlags", EnumValue = 16 },
+				{ Name = "None", Type = "CalendarFilterFlags", EnumValue = 32 },
+				{ Name = "Attire", Type = "CalendarFilterFlags", EnumValue = 64 },
+			},
+		},
+	},
+};
+
 ClassMaskMap = {
     [1] = {1, 2, 32, 35}, -- Plate Wearer
     [2] = {1, 2, 32, 35}, -- Plate Wearer
@@ -137,6 +162,7 @@ function Armor_Wanted_OnShow(self)
             self.SecondSelectionDropdown:SetDefaultText(Armor_Wanted_DB[EXPAND_SELECTION]);
         end
     end
+    InitFilterDropdown();
 end
 
 --------------------------------------------------------------------------------------------------
@@ -146,7 +172,7 @@ end
 --
 --------------------------------------------------------------------------------------------------
 local function IsSelected(minute)
-    return false;
+    return true;
 end
 
 --------------------------------------------------------------------------------------------------
@@ -156,7 +182,6 @@ end
 --
 --------------------------------------------------------------------------------------------------
 function Armor_Wanted_OnLoad(self)
-
     SlashCmdList["ARMORW"] = Armor_Wanted_SlashCommand;
   
     if( DEFAULT_CHAT_FRAME ) then
@@ -185,6 +210,7 @@ function Armor_Wanted_OnLoad(self)
 
     ArmorWanted_FirstDropdownFrame = self.FirstSelectionDropdown;
     ArmorWanted_SecondDropdownFrame = self.SecondSelectionDropdown;
+    ArmorWanted_FilterDropdown = self.FilterDropdown;
 
     self.FirstSelectionDropdown:SetWidth(100);
     self.SecondSelectionDropdown:SetWidth(200);
@@ -193,7 +219,57 @@ function Armor_Wanted_OnLoad(self)
 	    rootDescription:CreateButton("Class", Armor_Wanted_FirstSelectionDropdown_OnClick, "Class");
 	end);
 
- --   self.FirstSelectionDropdown:SetDefaultText("Item");
- --   self.SecondSelectionDropdown:SetDefaultText("Select Item");
-  end
-  
+    self.FilterDropdown:SetupMenu(function(dropdown, rootDescription)
+
+        rootDescription:CreateTitle("Filter");
+
+        ArmorWanted_Check_PVE = rootDescription:CreateCheckbox("PVE", IsSelected, Armor_Wanted_SetFilter, "PVE");
+        ArmorWanted_Check_PVP = rootDescription:CreateCheckbox("PVP", IsSelected, Armor_Wanted_SetFilter, "PVP");
+
+        ArmorWanted_Check_100 = rootDescription:CreateCheckbox("100%", IsSelected, Armor_Wanted_SetFilter, "PERCENT_100");
+        ArmorWanted_Check_90 = rootDescription:CreateCheckbox("90%", IsSelected, Armor_Wanted_SetFilter, "PERCENT_90");
+        ArmorWanted_Check_Other = rootDescription:CreateCheckbox("Other", IsSelected, Armor_Wanted_SetFilter, "PERCENT_OTHER");
+        ArmorWanted_Check_0 = rootDescription:CreateCheckbox("0%", IsSelected, Armor_Wanted_SetFilter, "PERCENT_0");
+
+        ArmorWanted_Check_Attire = rootDescription:CreateCheckbox("Attire", IsSelected, Armor_Wanted_SetFilter, "ATTIRE");
+
+    end);
+
+    self.FirstSelectionDropdown:SetDefaultText("Select Item");
+end
+
+function InitFilterDropdown()
+    local function IsSelected(data)
+        return Armor_Wanted_DB[data];
+    end
+
+    local function SetSelected(data)
+        Armor_Wanted_DB[data] = not Armor_Wanted_DB[data];
+        ChangeAWFilter();
+    end
+
+    for _, value in pairs(FilterNames) do
+        if (nil == Armor_Wanted_DB[value]) then
+            Armor_Wanted_DB[value] = true;
+        end
+    end
+
+    ArmorWanted_FilterDropdown:SetWidth(100);
+    ArmorWanted_FilterDropdown:SetupMenu(function(dropdown, rootDescription)
+
+        rootDescription:CreateTitle("Filter");
+
+        rootDescription:CreateCheckbox(FilterNames[FILTER_PVE_ID], IsSelected, SetSelected, FilterNames[FILTER_PVE_ID]);
+        rootDescription:CreateCheckbox(FilterNames[FILTER_PVP_ID], IsSelected, SetSelected, FilterNames[FILTER_PVP_ID]);
+        rootDescription:CreateSpacer();       
+        rootDescription:CreateCheckbox(FilterNames[FILTER_100_ID], IsSelected, SetSelected, FilterNames[FILTER_100_ID]);
+        rootDescription:CreateCheckbox(FilterNames[FILTER_90_ID], IsSelected, SetSelected, FilterNames[FILTER_90_ID]);
+        rootDescription:CreateCheckbox(FilterNames[FILTER_OTHER_ID], IsSelected, SetSelected, FilterNames[FILTER_OTHER_ID]);
+        rootDescription:CreateCheckbox(FilterNames[FILTER_NONE_ID], IsSelected, SetSelected, FilterNames[FILTER_NONE_ID]);
+        rootDescription:CreateSpacer();
+        rootDescription:CreateCheckbox(FilterNames[FILTER_STANDARD_ID], IsSelected, SetSelected, FilterNames[FILTER_STANDARD_ID]);
+        rootDescription:CreateCheckbox(FilterNames[FILTER_ATTIRE_ID], IsSelected, SetSelected, FilterNames[FILTER_ATTIRE_ID]);
+        rootDescription:CreateCheckbox(FilterNames[FILTER_GROUPS_ID], IsSelected, SetSelected, FilterNames[FILTER_GROUPS_ID]);
+    end);
+end
+

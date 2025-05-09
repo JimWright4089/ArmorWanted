@@ -129,7 +129,7 @@
 			<Layer>
 				<Texture name="Texture1" file="Interface\HelpFrame\HelpFrame-TopLeft.blp">
 					<Size>
-						<AbsDimension x="256" y="356" />
+						<AbsDimension x="256" y="360" />
 					</Size>
 					<Anchors>
 						<Anchor point="TOPLEFT" />
@@ -157,7 +157,7 @@
 				</Texture>
 				<Texture name="Texture4" file="Interface\HelpFrame\HelpFrame-TopRight.blp">
 					<Size>
-						<AbsDimension x="128" y="356" />
+						<AbsDimension x="128" y="360" />
 					</Size>
 					<Anchors>
 						<Anchor point="TOPRIGHT">
@@ -177,7 +177,7 @@
 				</Texture>
 				<Texture name="Texture6" file="Interface\HelpFrame\HelpFrame-Top.blp">
 					<Size>
-						<AbsDimension x="728" y="356" />
+						<AbsDimension x="728" y="360" />
 					</Size>
 					<Anchors>
 						<Anchor point="TOP" />
@@ -190,7 +190,7 @@
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="TOPLEFT">
 						<Offset>
-							<AbsDimension x="20" y="-20"/>
+							<AbsDimension x="20" y="-23"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
@@ -205,30 +205,50 @@
 				</Anchors>
 			</DropdownButton>
 
+			<EditBox name="ArmorWanted_SearchBox" parentKey="SearchBox" inherits="SearchBoxTemplate" letters="40" hidden="false">
+				<Size x="160" y="30"/>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="ArmorWanted_SecondSelectionDropdown" relativePoint="TOPRIGHT">
+						<Offset>
+							<AbsDimension x="40" y="0" />
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</EditBox>
 
-			<Button name="$parentOptionButton" inherits="UIPanelButtonTemplate" enableMouse="true" text="Options">
+			<Button name="ArmorWanted_SearchButton" inherits="UIPanelButtonTemplate" enableMouse="true" text="Search">
 				<Size>
 					<AbsDimension x="70" y="23" />
 				</Size>
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="ArmorWanted_SecondSelectionDropdown" relativePoint="TOPRIGHT">
+					<Anchor point="TOPLEFT" relativeTo="ArmorWanted_SearchBox" relativePoint="TOPRIGHT">
 						<Offset>
-							<AbsDimension x="400" y="0" />
+							<AbsDimension x="10" y="-4" />
 						</Offset>
 					</Anchor>
 				</Anchors>
 				<Scripts>
 					<OnClick>
-						ArmorWanted_ShowOptions();
+						ArmorWanted_Search();
           			</OnClick>
 				</Scripts>
 			</Button>
+
+			<DropdownButton name="ArmorWanted_FilterDropdown" parentKey="FilterDropdown" inherits="WowStyle1FilterDropdownTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="ArmorWanted_SecondSelectionDropdown" relativePoint="TOPRIGHT">
+						<Offset>
+							<AbsDimension x="407" y="0"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</DropdownButton>
 
 			<Frame name="ArmorWanted_TitleBar" inherits="Armor_Wanted_Line_Template" id="1">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="TOPLEFT">
 						<Offset>
-							<AbsDimension x="20" y="-50" />
+							<AbsDimension x="20" y="-54" />
 						</Offset>
 					</Anchor>
 				</Anchors>
@@ -239,7 +259,7 @@
 				<Size x="835" y="367"/>
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="ArmorWanted_FirstSelectionDropdown" relativePoint="BOTTOMLEFT">
-						<Offset x="0" y="-30"/>
+						<Offset x="0" y="-35"/>
 					</Anchor>
 				</Anchors>
 				<Scripts>
@@ -387,57 +407,6 @@
 				<Scripts>
 					<OnClick>
 			            self:GetParent():Hide();
-          			</OnClick>
-				</Scripts>
-			</Button>
-		</Frames>
-	</Frame>
-
-
-	<!--- ======================================================================
-		Options Frame
-	====================================================================== -->	
-	<Frame name="Armor_Wanted_Options_Frame" hidden="true" parent="UIParent" toplevel="true" movable="true" frameStrata="BACKGROUND" enableMouse="true">
-		<Size x="384" y="512"/>
-		<Anchors>
-		<Anchor point="CENTER" relativePoint="CENTER" relativeTo="UIParent"/>
-		</Anchors>
-		<Layers>
-			<Layer level="BACKGROUND">
-				<Texture name="$parent_Portrait" parentKey="portrait" file="Interface\Icons\INV_Misc_EngGizmos_30">
-				<Size x="60" y="60"/>
-				<Anchors>
-					<Anchor point="TOPLEFT">
-					<Offset x="7" y="-6"/>
-					</Anchor>
-				</Anchors>
-				</Texture>
-			</Layer>
-			<Layer level="OVERLAY">
-				<FontString name="$parent_Title" parentKey="title" inherits="GameFontNormal" text="BagBuggy">
-				<Anchors>
-					<Anchor point="TOP">
-					<Offset x="0" y="-18"/>
-					</Anchor>
-				</Anchors>
-				</FontString>
-			</Layer>
-		</Layers>
-		<Frames>
-			<Button name="$parentCloseButton1" inherits="UIPanelButtonTemplate" enableMouse="true" text="X">
-				<Size>
-					<AbsDimension x="20" y="30" />
-				</Size>
-				<Anchors>
-					<Anchor point="TOPRIGHT" relativeTo="$parent" relativePoint="TOPRIGHT">
-						<Offset>
-							<AbsDimension x="-17" y="-9" />
-						</Offset>
-					</Anchor>
-				</Anchors>
-				<Scripts>
-					<OnClick>
-            			self:GetParent():Hide();
           			</OnClick>
 				</Scripts>
 			</Button>
