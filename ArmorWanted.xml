@@ -85,12 +85,13 @@
 	<!--- ======================================================================
 		Main Frame
     ====================================================================== -->
-	<Frame name="Armor_Wanted_Main_Frame" hidden="true" parent="UIParent" toplevel="true" movable="true" frameStrata="BACKGROUND" enableMouse="true">
+	<Frame name="Armor_Wanted_Main_Frame" mixin="GameMenuFrameMixin" inherits="MainMenuFrameTemplate, CallbackRegistrantTemplate"  hidden="true" parent="UIParent" toplevel="true" movable="true" frameStrata="DIALOG" enableMouse="true">
 		<Scripts>
 			<OnLoad>self:RegisterForDrag("LeftButton"); Armor_Wanted_OnLoad(self);</OnLoad>
 			<OnDragStart>self:StartMoving();</OnDragStart>
 			<OnDragStop>self:StopMovingOrSizing();</OnDragStop>
 			<OnShow>Armor_Wanted_OnShow(self);</OnShow>
+			<OnHide>self:Hide();</OnHide>
 			<OnEvent function="Armor_Wanted_OnEvent"/>
 		</Scripts>
 

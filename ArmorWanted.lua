@@ -189,7 +189,9 @@ function Armor_Wanted_OnLoad(self)
     if( DEFAULT_CHAT_FRAME ) then
         DEFAULT_CHAT_FRAME:AddMessage("Armor Wanted Loaded -- Go get 'em, use /armorw panels");
     end
-  
+
+    tinsert(UISpecialFrames,"Armor_Wanted_Main_Frame");    
+
     local sets = C_TransmogSets.GetAllSets();
     for _,data in pairs(sets) do
 
