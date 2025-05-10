@@ -16,56 +16,60 @@
 					<Anchors><Anchor point="LEFT" relativeTo="$parentCol1" relativePoint="RIGHT"><Offset x="2" y="0"/></Anchor></Anchors>
 				</FontString>
 				<FontString name="$parentCol3" inherits="GameFontNormal" justifyH="LEFT">
-					<Size x="40" y="20"/>
+					<Size x="35" y="20"/>
 					<Anchors><Anchor point="LEFT" relativeTo="$parentCol2" relativePoint="RIGHT"><Offset x="2" y="0"/></Anchor></Anchors>
 				</FontString>
 				<FontString name="$parentCol4" inherits="GameFontNormal" justifyH="LEFT">
-					<Size x="40" y="20"/>
+					<Size x="35" y="20"/>
 					<Anchors><Anchor point="LEFT" relativeTo="$parentCol3" relativePoint="RIGHT"><Offset x="2" y="0"/></Anchor></Anchors>
 				</FontString>
 				<FontString name="$parentCol5" inherits="GameFontNormal" justifyH="LEFT">
-					<Size x="40" y="20"/>
+					<Size x="35" y="20"/>
 					<Anchors><Anchor point="LEFT" relativeTo="$parentCol4" relativePoint="RIGHT"><Offset x="2" y="0"/></Anchor></Anchors>
 				</FontString>
 				<FontString name="$parentCol6" inherits="GameFontNormal" justifyH="LEFT">
-					<Size x="40" y="20"/>
+					<Size x="35" y="20"/>
 					<Anchors><Anchor point="LEFT" relativeTo="$parentCol5" relativePoint="RIGHT"><Offset x="2" y="0"/></Anchor></Anchors>
 				</FontString>
 				<FontString name="$parentCol7" inherits="GameFontNormal" justifyH="LEFT">
-					<Size x="40" y="20"/>
+					<Size x="35" y="20"/>
 					<Anchors><Anchor point="LEFT" relativeTo="$parentCol6" relativePoint="RIGHT"><Offset x="2" y="0"/></Anchor></Anchors>
 				</FontString>
 				<FontString name="$parentCol8" inherits="GameFontNormal" justifyH="LEFT">
-					<Size x="40" y="20"/>
+					<Size x="35" y="20"/>
 					<Anchors><Anchor point="LEFT" relativeTo="$parentCol7" relativePoint="RIGHT"><Offset x="2" y="0"/></Anchor></Anchors>
 				</FontString>
 				<FontString name="$parentCol9" inherits="GameFontNormal" justifyH="LEFT">
-					<Size x="40" y="20"/>
+					<Size x="35" y="20"/>
 					<Anchors><Anchor point="LEFT" relativeTo="$parentCol8" relativePoint="RIGHT"><Offset x="2" y="0"/></Anchor></Anchors>
 				</FontString>
 				<FontString name="$parentCol10" inherits="GameFontNormal" justifyH="LEFT">
-					<Size x="40" y="20"/>
+					<Size x="35" y="20"/>
 					<Anchors><Anchor point="LEFT" relativeTo="$parentCol9" relativePoint="RIGHT"><Offset x="2" y="0"/></Anchor></Anchors>
 				</FontString>
 				<FontString name="$parentCol11" inherits="GameFontNormal" justifyH="LEFT">
-					<Size x="40" y="20"/>
+					<Size x="35" y="20"/>
 					<Anchors><Anchor point="LEFT" relativeTo="$parentCol10" relativePoint="RIGHT"><Offset x="2" y="0"/></Anchor></Anchors>
 				</FontString>
 				<FontString name="$parentCol12" inherits="GameFontNormal" justifyH="LEFT">
-					<Size x="40" y="20"/>
+					<Size x="35" y="20"/>
 					<Anchors><Anchor point="LEFT" relativeTo="$parentCol11" relativePoint="RIGHT"><Offset x="2" y="0"/></Anchor></Anchors>
 				</FontString>
 				<FontString name="$parentCol13" inherits="GameFontNormal" justifyH="LEFT">
-					<Size x="40" y="20"/>
+					<Size x="35" y="20"/>
 					<Anchors><Anchor point="LEFT" relativeTo="$parentCol12" relativePoint="RIGHT"><Offset x="2" y="0"/></Anchor></Anchors>
 				</FontString>
 				<FontString name="$parentCol14" inherits="GameFontNormal" justifyH="LEFT">
-					<Size x="40" y="20"/>
+					<Size x="35" y="20"/>
 					<Anchors><Anchor point="LEFT" relativeTo="$parentCol13" relativePoint="RIGHT"><Offset x="2" y="0"/></Anchor></Anchors>
 				</FontString>
 				<FontString name="$parentCol15" inherits="GameFontNormal" justifyH="LEFT">
-					<Size x="40" y="20"/>
+					<Size x="35" y="20"/>
 					<Anchors><Anchor point="LEFT" relativeTo="$parentCol14" relativePoint="RIGHT"><Offset x="2" y="0"/></Anchor></Anchors>
+				</FontString>
+				<FontString name="$parentCol16" inherits="GameFontNormal" justifyH="LEFT">
+					<Size x="35" y="20"/>
+					<Anchors><Anchor point="LEFT" relativeTo="$parentCol15" relativePoint="RIGHT"><Offset x="2" y="0"/></Anchor></Anchors>
 				</FontString>
 			</Layer>
 		</Layers>

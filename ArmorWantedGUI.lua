@@ -811,6 +811,7 @@ function ArmorWanted_Class_ScrollUpdate()
 
 	getglobal("ArmorWanted_TitleBarCol2"):SetText("Level");
 	getglobal("ArmorWanted_TitleBarCol3"):SetText("HD");
+	getglobal("ArmorWanted_TitleBar" .. "Col1"):SetWidth(35);
 	getglobal("ArmorWanted_TitleBarCol4"):SetText("SH");
 	getglobal("ArmorWanted_TitleBarCol5"):SetText("CH");
 	getglobal("ArmorWanted_TitleBarCol6"):SetText("WR");
@@ -823,6 +824,7 @@ function ArmorWanted_Class_ScrollUpdate()
 	getglobal("ArmorWanted_TitleBarCol13"):SetText(" ");
 	getglobal("ArmorWanted_TitleBarCol14"):SetText(" ");
 	getglobal("ArmorWanted_TitleBarCol15"):SetText(" ");
+	getglobal("ArmorWanted_TitleBarCol16"):SetText(" ");
 
 	for i = 1, total_lines, 1 do
 		local index = i + FauxScrollFrame_GetOffset(ArmorWanted_ScrollFrame);
@@ -864,6 +866,7 @@ function ArmorWanted_Class_ScrollUpdate()
 		end
 
 	  SetClassValue(getglobal(button:GetName() .. "Col3"),ClassGot[CurrentListOfSets[index].Head]);
+	  getglobal(button:GetName() .. "Col3"):SetWidth(35);
 	  SetClassValue(getglobal(button:GetName() .. "Col4"),ClassGot[CurrentListOfSets[index].Shoulder]);
 	  SetClassValue(getglobal(button:GetName() .. "Col5"),ClassGot[CurrentListOfSets[index].Chest]);
 	  SetClassValue(getglobal(button:GetName() .. "Col6"),ClassGot[CurrentListOfSets[index].Wrist]);
@@ -877,6 +880,7 @@ function ArmorWanted_Class_ScrollUpdate()
 	  getglobal(button:GetName() .. "Col13"):SetText(" ");
 	  getglobal(button:GetName() .. "Col14"):SetText(" ");
 	  getglobal(button:GetName() .. "Col15"):SetText(" ");
+	  getglobal(button:GetName() .. "Col16"):SetText(" ");
 
 	end	    
 end
@@ -909,19 +913,21 @@ function ArmorWanted_Expand_ScrollUpdate()
 	getglobal("ArmorWanted_TitleBar" .. "Col1"):SetText("Name");
 	getglobal("ArmorWanted_TitleBar" .. "Col1"):SetWidth(180);
 	getglobal("ArmorWanted_TitleBar" .. "Col2"):SetText("Level");
-	getglobal("ArmorWanted_TitleBar" .. "Col3"):SetText("WR");
-	getglobal("ArmorWanted_TitleBar" .. "Col4"):SetText("PA");
-	getglobal("ArmorWanted_TitleBar" .. "Col5"):SetText("HU");
-	getglobal("ArmorWanted_TitleBar" .. "Col6"):SetText("RO");
-	getglobal("ArmorWanted_TitleBar" .. "Col7"):SetText("PR");
-	getglobal("ArmorWanted_TitleBar" .. "Col8"):SetText("DK");
-	getglobal("ArmorWanted_TitleBar" .. "Col9"):SetText("SH");
-	getglobal("ArmorWanted_TitleBar" .. "Col10"):SetText("MA");
-	getglobal("ArmorWanted_TitleBar" .. "Col11"):SetText("WL");
-	getglobal("ArmorWanted_TitleBar" .. "Col12"):SetText("MO");
-	getglobal("ArmorWanted_TitleBar" .. "Col13"):SetText("DR");
-	getglobal("ArmorWanted_TitleBar" .. "Col14"):SetText("DH");
-	getglobal("ArmorWanted_TitleBar" .. "Col15"):SetText("EV");
+	getglobal("ArmorWanted_TitleBar" .. "Col3"):SetText("#");
+	getglobal("ArmorWanted_TitleBar" .. "Col3"):SetWidth(80);
+	getglobal("ArmorWanted_TitleBar" .. "Col4"):SetText("WR");
+	getglobal("ArmorWanted_TitleBar" .. "Col5"):SetText("PA");
+	getglobal("ArmorWanted_TitleBar" .. "Col6"):SetText("HU");
+	getglobal("ArmorWanted_TitleBar" .. "Col7"):SetText("RO");
+	getglobal("ArmorWanted_TitleBar" .. "Col8"):SetText("PR");
+	getglobal("ArmorWanted_TitleBar" .. "Col9"):SetText("DK");
+	getglobal("ArmorWanted_TitleBar" .. "Col10"):SetText("SH");
+	getglobal("ArmorWanted_TitleBar" .. "Col11"):SetText("MA");
+	getglobal("ArmorWanted_TitleBar" .. "Col12"):SetText("WL");
+	getglobal("ArmorWanted_TitleBar" .. "Col13"):SetText("MO");
+	getglobal("ArmorWanted_TitleBar" .. "Col14"):SetText("DR");
+	getglobal("ArmorWanted_TitleBar" .. "Col15"):SetText("DH");
+	getglobal("ArmorWanted_TitleBar" .. "Col16"):SetText("EV");
 
 	for i = 1, total_lines, 1 do
 	 	local index = i + FauxScrollFrame_GetOffset(ArmorWanted_ScrollFrame);
@@ -946,39 +952,45 @@ function ArmorWanted_Expand_ScrollUpdate()
 			getglobal(button:GetName() .. "Col2"):SetText(" ");
 		end
 
+		getglobal(button:GetName() .. "Col3"):SetText((CurrentListOfSets[index].total).."/"..tostring(CurrentListOfSets[index].collected));
+		getglobal(button:GetName() .. "Col3"):SetWidth(80);
+
 		getglobal(button:GetName() .. "Col1"):SetTextColor(0.95,0.95,0.95);	
 		getglobal(button:GetName() .. "Col2"):SetTextColor(0.95,0.95,0.95);	
+		getglobal(button:GetName() .. "Col3"):SetTextColor(0.95,0.95,0.95);	
 
 
 		if(CurrentListOfSets[index].collected == 0) then
 			getglobal(button:GetName() .. "Col1"):SetTextColor(0.95,0.05,0.05);	
 			getglobal(button:GetName() .. "Col2"):SetTextColor(0.95,0.05,0.05);	
+			getglobal(button:GetName() .. "Col3"):SetTextColor(0.95,0.05,0.05);	
 		end
 
 		if((CurrentListOfSets[index].collected / CurrentListOfSets[index].total) > .9) then
 			getglobal(button:GetName() .. "Col1"):SetTextColor(0.05,0.95,0.95);	
 			getglobal(button:GetName() .. "Col2"):SetTextColor(0.05,0.95,0.95);	
+			getglobal(button:GetName() .. "Col3"):SetTextColor(0.05,0.95,0.95);	
 		end
 
 		if(CurrentListOfSets[index].collected == CurrentListOfSets[index].total) then
 			getglobal(button:GetName() .. "Col1"):SetTextColor(0.05,0.95,0.05);	
 			getglobal(button:GetName() .. "Col2"):SetTextColor(0.05,0.95,0.05);	
+			getglobal(button:GetName() .. "Col3"):SetTextColor(0.05,0.95,0.05);	
 		end
 
-
-	SetExpandValue(getglobal(button:GetName() .. "Col3"),CurrentListOfSets[index]["Warrior"]);
-	SetExpandValue(getglobal(button:GetName() .. "Col4"),CurrentListOfSets[index]["Paladin"]);
-	SetExpandValue(getglobal(button:GetName() .. "Col5"),CurrentListOfSets[index]["Hunter"]);
-	SetExpandValue(getglobal(button:GetName() .. "Col6"),CurrentListOfSets[index]["Rogue"]);
-	SetExpandValue(getglobal(button:GetName() .. "Col7"),CurrentListOfSets[index]["Priest"]);
-	SetExpandValue(getglobal(button:GetName() .. "Col8"),CurrentListOfSets[index]["Death Knight"]);
-	SetExpandValue(getglobal(button:GetName() .. "Col9"),CurrentListOfSets[index]["Shaman"]);
-	SetExpandValue(getglobal(button:GetName() .. "Col10"),CurrentListOfSets[index]["Mage"]);
-	SetExpandValue(getglobal(button:GetName() .. "Col11"),CurrentListOfSets[index]["Warlock"]);
-	SetExpandValue(getglobal(button:GetName() .. "Col12"),CurrentListOfSets[index]["Monk"]);
-	SetExpandValue(getglobal(button:GetName() .. "Col13"),CurrentListOfSets[index]["Druid"]);
-	SetExpandValue(getglobal(button:GetName() .. "Col14"),CurrentListOfSets[index]["Demon Hunter"]);
-	SetExpandValue(getglobal(button:GetName() .. "Col15"),CurrentListOfSets[index]["Evoker"]);
+		SetExpandValue(getglobal(button:GetName() .. "Col4"),CurrentListOfSets[index]["Warrior"]);
+		SetExpandValue(getglobal(button:GetName() .. "Col5"),CurrentListOfSets[index]["Paladin"]);
+		SetExpandValue(getglobal(button:GetName() .. "Col6"),CurrentListOfSets[index]["Hunter"]);
+		SetExpandValue(getglobal(button:GetName() .. "Col7"),CurrentListOfSets[index]["Rogue"]);
+		SetExpandValue(getglobal(button:GetName() .. "Col8"),CurrentListOfSets[index]["Priest"]);
+		SetExpandValue(getglobal(button:GetName() .. "Col9"),CurrentListOfSets[index]["Death Knight"]);
+		SetExpandValue(getglobal(button:GetName() .. "Col10"),CurrentListOfSets[index]["Shaman"]);
+		SetExpandValue(getglobal(button:GetName() .. "Col11"),CurrentListOfSets[index]["Mage"]);
+		SetExpandValue(getglobal(button:GetName() .. "Col12"),CurrentListOfSets[index]["Warlock"]);
+		SetExpandValue(getglobal(button:GetName() .. "Col13"),CurrentListOfSets[index]["Monk"]);
+		SetExpandValue(getglobal(button:GetName() .. "Col14"),CurrentListOfSets[index]["Druid"]);
+		SetExpandValue(getglobal(button:GetName() .. "Col15"),CurrentListOfSets[index]["Demon Hunter"]);
+		SetExpandValue(getglobal(button:GetName() .. "Col16"),CurrentListOfSets[index]["Evoker"]);
 	end	    
 end
 
