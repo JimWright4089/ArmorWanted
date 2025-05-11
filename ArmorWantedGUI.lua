@@ -823,7 +823,7 @@ function ArmorWanted_Expand_ScrollUpdate()
 	getglobal("ArmorWanted_TitleBar" .. "Col1"):SetWidth(180);
 	getglobal("ArmorWanted_TitleBar" .. "Col2"):SetText("Level");
 	getglobal("ArmorWanted_TitleBar" .. "Col3"):SetText("#");
-	getglobal("ArmorWanted_TitleBar" .. "Col3"):SetWidth(80);
+	getglobal("ArmorWanted_TitleBar" .. "Col3"):SetWidth(70);
 	getglobal("ArmorWanted_TitleBar" .. "Col4"):SetText("WR");
 	getglobal("ArmorWanted_TitleBar" .. "Col5"):SetText("PA");
 	getglobal("ArmorWanted_TitleBar" .. "Col6"):SetText("HU");
@@ -862,7 +862,7 @@ function ArmorWanted_Expand_ScrollUpdate()
 		end
 
 		getglobal(button:GetName() .. "Col3"):SetText((CurrentListOfSets[index].total).."/"..tostring(CurrentListOfSets[index].collected));
-		getglobal(button:GetName() .. "Col3"):SetWidth(80);
+		getglobal(button:GetName() .. "Col3"):SetWidth(70);
 
 		getglobal(button:GetName() .. "Col1"):SetTextColor(0.95,0.95,0.95);	
 		getglobal(button:GetName() .. "Col2"):SetTextColor(0.95,0.95,0.95);	
