@@ -1,8 +1,9 @@
 <Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
 	<Script file="ArmorWantedGUI.lua" />
 
-
-	<!-- Template for a single row in the scroll list -->
+	<!--- ======================================================================
+		The scroll frame tamplate for the wanted armor list.
+    ====================================================================== -->
 	<Frame name="Armor_Wanted_Line_Template" virtual="true">
 		<Size x="800" y="18"/> 
 		<Layers>
@@ -74,14 +75,8 @@
 			</Layer>
 		</Layers>
 		<Frames>
-			<!-- Add invisible button for mouse interaction if needed -->
 			<Button name="$parentButton">
 				<Anchors><Anchor point="TOPLEFT"/><Anchor point="BOTTOMRIGHT"/></Anchors>
-				<Scripts>
-					<!-- <OnClick> function to handle row click </OnClick> -->
-					<!-- <OnEnter> function to handle mouseover </OnEnter> -->
-					<!-- <OnLeave> function to handle mouseout </OnLeave> -->
-				</Scripts>
 			</Button>
 		</Frames>
 	</Frame>
@@ -89,7 +84,7 @@
 	<!--- ======================================================================
 		Main Frame
     ====================================================================== -->
-	<Frame name="Armor_Wanted_Main_Frame" mixin="GameMenuFrameMixin" inherits="MainMenuFrameTemplate, CallbackRegistrantTemplate"  hidden="true" parent="UIParent" toplevel="true" movable="true" frameStrata="DIALOG" enableMouse="true">
+	<Frame name="Armor_Wanted_Main_Frame" inherits="CallbackRegistrantTemplate"  hidden="true" parent="UIParent" toplevel="true" movable="true" frameStrata="DIALOG" enableMouse="true">
 		<Scripts>
 			<OnLoad>self:RegisterForDrag("LeftButton"); Armor_Wanted_OnLoad(self);</OnLoad>
 			<OnDragStart>self:StartMoving();</OnDragStart>

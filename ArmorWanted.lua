@@ -290,7 +290,7 @@ end
 function Armor_Wanted_OnEvent(self, event,...)
 
     if ("VARIABLES_LOADED" == event) then
-          
+        Armor_Wanted_DB[SEARCH_TEXT] = "";
     end
 
     if ("LOOT_CLOSED" == event) then
