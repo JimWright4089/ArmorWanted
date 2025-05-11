@@ -1,20 +1,19 @@
 --------------------------------------------------------------------------------------------------
 --  
---  $Workfile: Grouper.lua$
+--  $Workfile: ArmorWantedGUI.lua$
 --
 --  $Revision: 1$
 --
---  Project:      Grouper
+--  Project:      Armor Wanted
 --
---                           Copyright (c) 2007
+--                           Copyright (c) 2025
 --                              James A Wright
 --                            All Rights Reserved
 --
 --  File Description:
---      This file contains all of the functions needed to run the Grouper WoW plug in
+--      This file contains all of the functions needed do GUI stuff for the Armor Wanted mod.
 --  
 --------------------------------------------------------------------------------------------------
-
 
 MAIN_SELECTION      = "main";
 CLASS_SELECTION     = "class";
@@ -43,6 +42,7 @@ FILTER_GROUPS_ID = 9;
 FilterNames = {FILTER_PVE,  FILTER_PVP, FILTER_100, FILTER_90, FILTER_OTHER, FILTER_0, FILTER_STANDARD, FILTER_ATTIRE, FILTER_GROUPS}
 
 Armor_Wanted_DB  = {};
+BaseSets = {};
 
 PVP_Values = { "Gladiator", "Challenger", "Duelist", "Rival", "Elite", "Honor", "PVP Rare", "Combatant I", "Warfront", "Aspirant" };
 
@@ -127,26 +127,6 @@ ClassGot = {
 	[0] = "N",
 	[1] = "Y"
 }
-
---------------------------------------------------------------------------------------------------
---  Function: Grouper_MainShow
---
---  Desc:  Show the MAIN screen
---
---------------------------------------------------------------------------------------------------
-function Armor_Wanted_MainShow()
-  Armor_Wanted_MainUpdate();
-end
-
---------------------------------------------------------------------------------------------------
---  Function: Grouper_MainUpdate
---
---  Desc:  Update the party screen
---
---------------------------------------------------------------------------------------------------
-function Armor_Wanted_MainUpdate()
-end
-
 
 --------------------------------------------------------------------------------------------------
 --  Function: Grouper_MainPlusButton
@@ -501,42 +481,14 @@ function BuildExpansionList(expansionID)
 	TempListOfSets = {};
 
 	for _,data in ipairs(_G['BaseSets']) do
-			-- if (data.label == "Season 5") then
-			-- 	for key, value in pairs(data) do
-			-- 	      print(">>", key, value)
-			-- 	end            
-			-- 	print(" ")
-			-- end
-
-
 		local curRow  = {};
 		if (data.expansionID == expansionID) and (nil ~= data.description)  then
 			local theClassMask = data.classMask;
 
-			-- if(35 == theClassMask) then
-			-- 	theClassMask = 1;
-			-- end
-			-- if(0 == theClassMask) then
-			-- 	theClassMask = 1;
-			-- end
-			-- if(400 == theClassMask) then
-			-- 	theClassMask = 16;
-			-- end
-			-- if(3592 == theClassMask) then
-			-- 	theClassMask = 8;
-			-- end
-			-- if(4164 == theClassMask) then
-			-- 	theClassMask = 4;
-			-- end
-	
 			curRow["label"] = data.label;
 			curRow["description"] = data.description;
 			curRow["uiOrder"] = data.uiOrder;
 			curRow["classMask"] = theClassMask;
-
-            -- for key, value in pairs(data) do
-            --      print(">>", key, value)
-            -- end            
 
 			local setRow = GetSetStatus(data.setID);
 

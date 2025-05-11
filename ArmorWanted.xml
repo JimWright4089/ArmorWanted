@@ -74,11 +74,6 @@
 				</FontString>
 			</Layer>
 		</Layers>
-		<Frames>
-			<Button name="$parentButton">
-				<Anchors><Anchor point="TOPLEFT"/><Anchor point="BOTTOMRIGHT"/></Anchors>
-			</Button>
-		</Frames>
 	</Frame>
 
 	<!--- ======================================================================
@@ -392,8 +387,6 @@
           			</OnClick>
 				</Scripts>
 			</Button>
-
-			<!-- Example adjustment for CloseButton2 -->
 			<Button name="$parentCloseButton2" inherits="UIPanelButtonTemplate" enableMouse="true" text="Close">
 				<Size>
 					<AbsDimension x="70" y="23" />
