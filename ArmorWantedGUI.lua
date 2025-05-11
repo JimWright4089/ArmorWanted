@@ -2,8 +2,6 @@
 --  
 --  $Workfile: ArmorWantedGUI.lua$
 --
---  $Revision: 1$
---
 --  Project:      Armor Wanted
 --
 --                           Copyright (c) 2025
@@ -128,17 +126,6 @@ ClassGot = {
 	[1] = "Y"
 }
 
---------------------------------------------------------------------------------------------------
---  Function: Grouper_MainPlusButton
---
---  Desc:  Push the main plus button and increase the rating
---
---------------------------------------------------------------------------------------------------
-function Armor_Wanted_Button_One(self, button, down)
-  print("One");
-  print(UnitClass(UNIT_PLAYER));
-end
-
 
 --------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------
@@ -151,9 +138,9 @@ end
 --------------------------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------------------------
---  Function: ArmorWanted_ClassDropdown_Initialize
+--  Function: ArmorWanted_FirstSelectionDropdown_Initialize
 --
---  Desc:  Initializes the class dropdown menu items.
+--  Desc:  Init the main Class/Expansion dropdown menu items.
 --
 --------------------------------------------------------------------------------------------------
 function ArmorWanted_FirstSelectionDropdown_Initialize(self, level)
@@ -170,9 +157,9 @@ function ArmorWanted_FirstSelectionDropdown_Initialize(self, level)
 end
 
 --------------------------------------------------------------------------------------------------
---  Function: ArmorWanted_ClassDropdown_Initialize
+--  Function: ArmorWanted_SecondSelectionClassDropdown_Initialize
 --
---  Desc:  Initializes the class dropdown menu items.
+--  Desc:  Fill the second dropdown with the class names.
 --
 --------------------------------------------------------------------------------------------------
 function ArmorWanted_SecondSelectionClassDropdown_Initialize()
@@ -202,9 +189,9 @@ function ArmorWanted_SecondSelectionClassDropdown_Initialize()
 end
 
 --------------------------------------------------------------------------------------------------
---  Function: ArmorWanted_ClassDropdown_Initialize
+--  Function: ArmorWanted_SecondSelectionExpansionDropdown_Initialize
 --
---  Desc:  Initializes the class dropdown menu items.
+--  Desc:  Fill the second dropdown with the Expansion names.
 --
 --------------------------------------------------------------------------------------------------
 function ArmorWanted_SecondSelectionExpansionDropdown_Initialize()
@@ -231,7 +218,6 @@ function ArmorWanted_SecondSelectionExpansionDropdown_Initialize()
 	end
 end
 
-
 --------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------
@@ -243,9 +229,9 @@ end
 --------------------------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------------------------
---  Function: Armor_Wanted_ClassDropdown_OnClick
+--  Function: ChangeAWFilter
 --
---  Desc:  Handles clicks on the class dropdown items.
+--  Desc:  Do the main work to display the data in the list.
 --
 --------------------------------------------------------------------------------------------------
 function ChangeAWFilter()
@@ -301,9 +287,9 @@ end
 --------------------------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------------------------
---  Function: Armor_Wanted_ClassDropdown_OnClick
+--  Function: Armor_Wanted_FirstSelectionDropdown_OnClick
 --
---  Desc:  Handles clicks on the class dropdown items.
+--  Desc:  User clicks on something in the first dropdown menu.
 --
 --------------------------------------------------------------------------------------------------
 function Armor_Wanted_FirstSelectionDropdown_OnClick(thing)
@@ -313,9 +299,9 @@ function Armor_Wanted_FirstSelectionDropdown_OnClick(thing)
 end
 
 --------------------------------------------------------------------------------------------------
---  Function: Armor_Wanted_ClassDropdown_OnClick
+--  Function: Armor_Wanted_SecondSelectionClassDropdown_OnClick
 --
---  Desc:  Handles clicks on the class dropdown items.
+--  Desc:  User clicks on something in the second dropdown menu.
 --
 --------------------------------------------------------------------------------------------------
 function Armor_Wanted_SecondSelectionClassDropdown_OnClick(thing)
@@ -325,9 +311,9 @@ function Armor_Wanted_SecondSelectionClassDropdown_OnClick(thing)
 end
 
 --------------------------------------------------------------------------------------------------
---  Function: Armor_Wanted_ClassDropdown_OnClick
+--  Function: Armor_Wanted_SecondSelectionExpansionDropdown_OnClick
 --
---  Desc:  Handles clicks on the class dropdown items.
+--  Desc:  User clicks on something in the second dropdown menu.
 --
 --------------------------------------------------------------------------------------------------
 function Armor_Wanted_SecondSelectionExpansionDropdown_OnClick(thing)
@@ -337,27 +323,9 @@ function Armor_Wanted_SecondSelectionExpansionDropdown_OnClick(thing)
 end
 
 --------------------------------------------------------------------------------------------------
---  Function: Armor_Wanted_SetFilter
+--  Function: ArmorWanted_Search
 --
---  Desc:  Handles clicks on the class dropdown items.
---
---------------------------------------------------------------------------------------------------
--- function Armor_Wanted_SetFilter(thing)
--- 	print(thing);
---     for key, value in pairs(ArmorWanted_Check_Array) do
---         print(key, value)
--- 		if(value["data"] == thing) then
--- 		 	for key2, value2 in pairs(value) do
--- 				print(">>",key2, value2)
--- 		   	end
--- 		end
--- 	end
--- end
-
---------------------------------------------------------------------------------------------------
---  Function: Armor_Wanted_SetFilter
---
---  Desc:  Handles clicks on the class dropdown items.
+--  Desc:  Set the seatch item and search  
 --
 --------------------------------------------------------------------------------------------------
 function ArmorWanted_Search(text)
@@ -376,9 +344,51 @@ end
 --------------------------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------------------------
---  Function: Armor_Wanted_ClassDropdown_OnClick
+--  Function: compareListOfSets
 --
---  Desc:  Handles clicks on the class dropdown items.
+--  Desc:  Sort the list by the Blizzard order
+--
+--------------------------------------------------------------------------------------------------
+function compareListOfSets(a,b)
+	return a["uiOrder"] < b["uiOrder"]
+end
+
+--------------------------------------------------------------------------------------------------
+--  Function: compareExpandListOfSets
+--
+--  Desc:  Sort the list by the name of the insance and then the description
+--
+--------------------------------------------------------------------------------------------------
+function compareExpandListOfSets(a,b)
+	if(nil == a["label"]) then
+		return false;
+	end
+	if(nil == b["label"]) then
+		return true;
+	end
+
+	if(a["label"] == b["label"]) then
+		return a["description"] < b["description"]
+	else
+		return a["label"] < b["label"]
+	end
+end
+
+
+--------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------
+--  
+--  Build the lists
+--  
+--------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------------------------
+--  Function: BuildClassList
+--
+--  Desc:  Build the list for a class selection
 --
 --------------------------------------------------------------------------------------------------
 function BuildClassList(classMask)
@@ -387,14 +397,6 @@ function BuildClassList(classMask)
 	for _,data in ipairs(_G['BaseSets']) do
 		local curRow  = {};
 		if (nil ~= data.description) then
-
-			-- if (data.label == "Darkmoon Faire") then
-			-- 	for key, value in pairs(data) do
-			-- 	      print(">>", key, value)
-			-- 	end            
-			-- 	print(" ")
-			-- end
-
 			local shouldInclude = false;
 
 			if(0 == data.classMask) then
@@ -417,10 +419,6 @@ function BuildClassList(classMask)
 				curRow["description"] = data.description;
 				curRow["uiOrder"] = data.uiOrder;
 
-				-- for key, value in pairs(data) do
-				--       print(">>", key, value)
-				-- end            
-
 				local setRow = GetSetStatus(data.setID);
 
 				for key, value in pairs(setRow) do
@@ -435,45 +433,10 @@ function BuildClassList(classMask)
 	table.sort(CurrentListOfSets, compareListOfSets)
 end
 
-function compareListOfSets(a,b)
-	return a["uiOrder"] < b["uiOrder"]
-end
-
-function compareExpandListOfSets(a,b)
-	if(nil == a["label"]) then
-		return false;
-	end
-	if(nil == b["label"]) then
-		return true;
-	end
-
-	if(a["label"] == b["label"]) then
-		return a["description"] < b["description"]
-	else
-		return a["label"] < b["label"]
-	end
-end
-
-function PrintOutList()
-	for _,data in ipairs(CurrentListOfSets) do	
-		print(">>",data.label, data.description, data.uiOrder)
-        -- for key, value in pairs(data) do
-		-- 	if type(value) == "table" then
-		-- 		for key2, value2 in pairs(value) do
-		-- 			print(">>>>",key, key2, value2)
-		-- 		end
-		-- 	else
-        --       print(">>", key, value)
-		-- 	end
-        -- end            
-		-- print(" ")
-	end
-end
-
 --------------------------------------------------------------------------------------------------
---  Function: Armor_Wanted_ClassDropdown_OnClick
+--  Function: BuildExpansionList
 --
---  Desc:  Handles clicks on the class dropdown items.
+--  Desc:  Build the list for a expansion selection
 --
 --------------------------------------------------------------------------------------------------
 function BuildExpansionList(expansionID)
@@ -508,11 +471,6 @@ function BuildExpansionList(expansionID)
 	curRow  = {};
 
 	for _,data in ipairs(TempListOfSets) do
-        -- for key, value in pairs(data) do
-        --       print(">>", key, value)
-        -- end            
-		-- print(">>")
-		
 		if(label ~= data.label) or (description ~= data.description) then
 			if(true ~= first) then
 				table.insert(CurrentListOfSets, curRow);
@@ -560,9 +518,9 @@ function BuildExpansionList(expansionID)
 end
 
 --------------------------------------------------------------------------------------------------
---  Function: Armor_Wanted_ClassDropdown_OnClick
+--  Function: FilterNumber
 --
---  Desc:  Handles clicks on the class dropdown items.
+--  Desc:  Include items on how many have been collected
 --
 --------------------------------------------------------------------------------------------------
 function FilterNumber()
@@ -610,9 +568,9 @@ function FilterNumber()
 end
 
 --------------------------------------------------------------------------------------------------
---  Function: Armor_Wanted_ClassDropdown_OnClick
+--  Function: FilterAttire
 --
---  Desc:  Handles clicks on the class dropdown items.
+--  Desc:  Include items on what type of set it is
 --
 --------------------------------------------------------------------------------------------------
 function FilterAttire()
@@ -648,9 +606,9 @@ function FilterAttire()
 end
 
 --------------------------------------------------------------------------------------------------
---  Function: Armor_Wanted_ClassDropdown_OnClick
+--  Function: isPVP
 --
---  Desc:  Handles clicks on the class dropdown items.
+--  Desc:  Test what the description is to see if it is a PVP item
 --
 --------------------------------------------------------------------------------------------------
 function isPVP(data)
@@ -664,9 +622,9 @@ function isPVP(data)
 end
 
 --------------------------------------------------------------------------------------------------
---  Function: Armor_Wanted_ClassDropdown_OnClick
+--  Function: FilterPVPPVE
 --
---  Desc:  Handles clicks on the class dropdown items.
+--  Desc:  Only include things in in the PVP/PVE filter
 --
 --------------------------------------------------------------------------------------------------
 function FilterPVPPVE()
@@ -688,9 +646,9 @@ function FilterPVPPVE()
 end
 
 --------------------------------------------------------------------------------------------------
---  Function: Armor_Wanted_ClassDropdown_OnClick
+--  Function: FilterSearch
 --
---  Desc:  Handles clicks on the class dropdown items.
+--  Desc:  Only include things in the search
 --
 --------------------------------------------------------------------------------------------------
 function FilterSearch()
@@ -720,9 +678,9 @@ end
 --------------------------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------------------------
---  Function: Grouper_MainUpdate
+--  Function: ArmorWanted_ScrollUpdate
 --
---  Desc:  Update the party screen
+--  Desc:  Change the second dropdown menu to the class or expansion names.
 --
 --------------------------------------------------------------------------------------------------
 function ArmorWanted_ScrollUpdate()
@@ -735,9 +693,9 @@ function ArmorWanted_ScrollUpdate()
 end
 
 --------------------------------------------------------------------------------------------------
---  Function: Grouper_MainUpdate
+--  Function: ArmorWanted_Class_ScrollUpdate
 --
---  Desc:  Update the party screen
+--  Desc:  Handle scrolling for the class selection
 --
 --------------------------------------------------------------------------------------------------
 function ArmorWanted_Class_ScrollUpdate()
@@ -837,11 +795,10 @@ function ArmorWanted_Class_ScrollUpdate()
 	end	    
 end
 
-
 --------------------------------------------------------------------------------------------------
---  Function: Grouper_MainUpdate
+--  Function: ArmorWanted_Expand_ScrollUpdate
 --
---  Desc:  Update the party screen
+--  Desc:  Handle scrolling for the expansions selection
 --
 --------------------------------------------------------------------------------------------------
 function ArmorWanted_Expand_ScrollUpdate()
@@ -849,7 +806,7 @@ function ArmorWanted_Expand_ScrollUpdate()
 
 	FauxScrollFrame_Update(ArmorWanted_ScrollFrame, getn(CurrentListOfSets), MAX_LINES_FOR_MAIN, PIXELS_PER_LINE);
   
-	  -- Hide the party lines in case we have less than 12
+	  -- Hide the party lines in case we have less than max rows
 	for i = 1, MAX_LINES_FOR_MAIN, 1 do
 	  local button = getglobal("ArmorWantedScrollLine" .. i);
 	  button:Hide();
@@ -946,6 +903,12 @@ function ArmorWanted_Expand_ScrollUpdate()
 	end	    
 end
 
+--------------------------------------------------------------------------------------------------
+--  Function: SetClassValue
+--
+--  Desc:  Handle displaying and changing the color of the class values
+--
+--------------------------------------------------------------------------------------------------
 function SetClassValue(button, value)
 	button:SetText(value);
 
@@ -958,6 +921,12 @@ function SetClassValue(button, value)
 	end
 end
 
+--------------------------------------------------------------------------------------------------
+--  Function: SetExpandValue
+--
+--  Desc:  Handle displaying and changing the color of the expansion values
+--
+--------------------------------------------------------------------------------------------------
 function SetExpandValue(button, value)
 
 	if(-1 ~= value["total"]) then
@@ -989,8 +958,6 @@ end
 --
 --------------------------------------------------------------------------------------------------
 function GetSetStatus(setID)
-
---	print("setID:", setID);
 
 	local returnList = {};
 	local collectedItems = {}; 
